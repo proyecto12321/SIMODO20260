@@ -995,7 +995,7 @@ const App = {
     },
 
     // ------------------------------------------------------------------
-    // EVALUAR FORMULARIO 2 (Rúbrica con grupos y estados)
+    // EVALUAR FORMULARIO 2 (RÃºbrica con grupos y estados)
     // ------------------------------------------------------------------
     renderEvaluarFormulario2() {
         const base = this.personalEvaluable();
@@ -1023,7 +1023,7 @@ const App = {
                 <img class="persona-avatar-sm" src="${this.fotoDe(p)}" alt="">
                 <div class="persona-info">
                     <h4>${p.nombre_completo}</h4>
-                    <p>${p.cargo || ''}${p.area ? ' · ' + p.area : ''}</p>
+                    <p>${p.cargo || ''}${p.area ? ' Â· ' + p.area : ''}</p>
                 </div>
                 ${badge}
                 <div class="persona-actions">
@@ -1033,8 +1033,8 @@ const App = {
         }).join('');
         container.innerHTML = `<div class="card"><div class="card-header">
             <span class="card-title"><i class="fas fa-clipboard-list"></i> Formulario 2</span>
-            <span class="card-subtitle">${evaluables.length} persona(s) · ${this.gruposFormulario2.length} grupos</span>
-            </div>${filtroHtml}<p class="text-muted" style="margin-bottom:16px;">Evaluación mediante rúbrica organizada por dimensiones: Inicio, Proceso, Logrado.</p>${rows}</div>`;
+            <span class="card-subtitle">${evaluables.length} persona(s) Â· ${this.gruposFormulario2.length} grupos</span>
+            </div>${filtroHtml}<p class="text-muted" style="margin-bottom:16px;">EvaluaciÃ³n mediante rÃºbrica organizada por dimensiones: Inicio, Proceso, Logrado.</p>${rows}</div>`;
     },
 
     abrirFormulario2(dni) {
@@ -1042,7 +1042,7 @@ const App = {
         if (!persona) return;
         const existente = this.yaEvaluadoFormulario2(this.currentUser.dni, dni);
 
-        document.getElementById('form2-title').textContent = 'Formulario 2 · ' + persona.nombre_completo;
+        document.getElementById('form2-title').textContent = 'Formulario 2 Â· ' + persona.nombre_completo;
         const cont = document.getElementById('form2-grupos');
         cont.innerHTML = this.gruposFormulario2.map((grupo, gIdx) => {
             const itemsHtml = grupo.items.map((item, iIdx) => {
@@ -1054,7 +1054,7 @@ const App = {
                         <label class="state-option"><input type="radio" name="f2-g${gIdx}-i${iIdx}" value="proceso" ${valorPrevio.estado === 'proceso' ? 'checked' : ''}> <span class="state-badge state-proceso">Proceso</span></label>
                         <label class="state-option"><input type="radio" name="f2-g${gIdx}-i${iIdx}" value="logrado" ${valorPrevio.estado === 'logrado' ? 'checked' : ''}> <span class="state-badge state-logrado">Logrado</span></label>
                     </div>
-                    <input type="text" class="form-control" id="f2-g${gIdx}-i${iIdx}-obs" placeholder="Observación (obligatoria para finalizar)" value="${valorPrevio.observacion || ''}">
+                    <input type="text" class="form-control" id="f2-g${gIdx}-i${iIdx}-obs" placeholder="ObservaciÃ³n (opcional)" value="${valorPrevio.observacion || ''}">
                 </div>`;
             }).join('');
             return `<div class="rubric-group">
@@ -1063,14 +1063,14 @@ const App = {
             </div>`;
         }).join('');
 
-        // Conclusiones de manera abierta (no son parte de la rúbrica de estados)
+        // Conclusiones de manera abierta (no son parte de la rÃºbrica de estados)
         const conclusionesPrevias = existente?.conclusiones || {};
         const conclusionesHtml = `
             <div class="rubric-group" style="margin-top:24px;">
                 <h4 class="rubric-group-title"><i class="fas fa-comment-dots"></i> Conclusiones</h4>
                 ${this.camposConclusionFormulario2.map(campo => `
                     <div class="form-group">
-                        <label>${campo.label}</label>
+                        <label>${campo.label}${campo.id === 'observaciones' ? ' (opcional)' : ''}</label>
                         <textarea class="form-control" id="f2-conclusion-${campo.id}" rows="3" placeholder="${campo.placeholder}">${conclusionesPrevias[campo.id] || ''}</textarea>
                     </div>
                 `).join('')}
@@ -1078,48 +1078,48 @@ const App = {
         `;
         cont.innerHTML += conclusionesHtml;
 
-        // Agregar campos de observación para docentes
+        // Agregar campos de observaciÃ³n para docentes
         let observacionesHtml = '';
         if (persona.rol === 'docente') {
             const obsPrevias = existente?.observacionesJerarquicas || {};
             observacionesHtml = `
                 <div class="rubric-group" style="margin-top:32px;padding:20px;background:var(--bg-secondary);border-radius:12px;">
-                    <h4 class="rubric-group-title" style="color:var(--guinda);"><i class="fas fa-clipboard-user"></i> Observaciones Jerárquicas</h4>
+                    <h4 class="rubric-group-title" style="color:var(--guinda);"><i class="fas fa-clipboard-user"></i> Observaciones JerÃ¡rquicas</h4>
                     <div class="form-group">
-                        <label><i class="fas fa-user-tie"></i> Observación del Coordinador</label>
-                        <textarea class="form-control" id="f2-obs-coordinador" rows="3" placeholder="Observaciones del coordinador de área...">${obsPrevias.coordinador || ''}</textarea>
+                        <label><i class="fas fa-user-tie"></i> ObservaciÃ³n del Coordinador</label>
+                        <textarea class="form-control" id="f2-obs-coordinador" rows="3" placeholder="Observaciones del coordinador de Ã¡rea...">${obsPrevias.coordinador || ''}</textarea>
                     </div>
                     <div class="form-group">
-                        <label><i class="fas fa-user-shield"></i> Observación de la Subdirectora</label>
+                        <label><i class="fas fa-user-shield"></i> ObservaciÃ³n de la Subdirectora</label>
                         <select class="form-control" id="f2-obs-subdirectora-filtro" style="margin-bottom:8px;">
-                            <option value="">Todas las áreas</option>
+                            <option value="">Todas las Ã¡reas</option>
                             <option value="CCSS" ${obsPrevias.subdirectoraFiltro === 'CCSS' ? 'selected' : ''}>Ciencias Sociales</option>
-                            <option value="CYT" ${obsPrevias.subdirectoraFiltro === 'CYT' ? 'selected' : ''}>Ciencia y Tecnología</option>
-                            <option value="MATEMATICA" ${obsPrevias.subdirectoraFiltro === 'MATEMATICA' ? 'selected' : ''}>Matemática</option>
-                            <option value="COMUNICACION" ${obsPrevias.subdirectoraFiltro === 'COMUNICACION' ? 'selected' : ''}>Comunicación</option>
-                            <option value="INGLES" ${obsPrevias.subdirectoraFiltro === 'INGLES' ? 'selected' : ''}>Inglés</option>
-                            <option value="EPT" ${obsPrevias.subdirectoraFiltro === 'EPT' ? 'selected' : ''}>Educación para el Trabajo</option>
+                            <option value="CYT" ${obsPrevias.subdirectoraFiltro === 'CYT' ? 'selected' : ''}>Ciencia y TecnologÃ­a</option>
+                            <option value="MATEMATICA" ${obsPrevias.subdirectoraFiltro === 'MATEMATICA' ? 'selected' : ''}>MatemÃ¡tica</option>
+                            <option value="COMUNICACION" ${obsPrevias.subdirectoraFiltro === 'COMUNICACION' ? 'selected' : ''}>ComunicaciÃ³n</option>
+                            <option value="INGLES" ${obsPrevias.subdirectoraFiltro === 'INGLES' ? 'selected' : ''}>InglÃ©s</option>
+                            <option value="EPT" ${obsPrevias.subdirectoraFiltro === 'EPT' ? 'selected' : ''}>EducaciÃ³n para el Trabajo</option>
                             <option value="ARTE" ${obsPrevias.subdirectoraFiltro === 'ARTE' ? 'selected' : ''}>Arte y Cultura</option>
-                            <option value="EDUCACION_FISICA" ${obsPrevias.subdirectoraFiltro === 'EDUCACION_FISICA' ? 'selected' : ''}>Educación Física</option>
+                            <option value="EDUCACION_FISICA" ${obsPrevias.subdirectoraFiltro === 'EDUCACION_FISICA' ? 'selected' : ''}>EducaciÃ³n FÃ­sica</option>
                             <option value="DPCC" ${obsPrevias.subdirectoraFiltro === 'DPCC' ? 'selected' : ''}>DPCC</option>
-                            <option value="EDUCACION_RELIGIOSA" ${obsPrevias.subdirectoraFiltro === 'EDUCACION_RELIGIOSA' ? 'selected' : ''}>Educación Religiosa</option>
+                            <option value="EDUCACION_RELIGIOSA" ${obsPrevias.subdirectoraFiltro === 'EDUCACION_RELIGIOSA' ? 'selected' : ''}>EducaciÃ³n Religiosa</option>
                         </select>
                         <textarea class="form-control" id="f2-obs-subdirectora" rows="3" placeholder="Observaciones de la subdirectora...">${obsPrevias.subdirectora || ''}</textarea>
                     </div>
                     <div class="form-group">
-                        <label><i class="fas fa-user-crown"></i> Observación de la Directora</label>
+                        <label><i class="fas fa-user-crown"></i> ObservaciÃ³n de la Directora</label>
                         <select class="form-control" id="f2-obs-directora-filtro" style="margin-bottom:8px;">
-                            <option value="">Todas las áreas</option>
+                            <option value="">Todas las Ã¡reas</option>
                             <option value="CCSS" ${obsPrevias.directoraFiltro === 'CCSS' ? 'selected' : ''}>Ciencias Sociales</option>
-                            <option value="CYT" ${obsPrevias.directoraFiltro === 'CYT' ? 'selected' : ''}>Ciencia y Tecnología</option>
-                            <option value="MATEMATICA" ${obsPrevias.directoraFiltro === 'MATEMATICA' ? 'selected' : ''}>Matemática</option>
-                            <option value="COMUNICACION" ${obsPrevias.directoraFiltro === 'COMUNICACION' ? 'selected' : ''}>Comunicación</option>
-                            <option value="INGLES" ${obsPrevias.directoraFiltro === 'INGLES' ? 'selected' : ''}>Inglés</option>
-                            <option value="EPT" ${obsPrevias.directoraFiltro === 'EPT' ? 'selected' : ''}>Educación para el Trabajo</option>
+                            <option value="CYT" ${obsPrevias.directoraFiltro === 'CYT' ? 'selected' : ''}>Ciencia y TecnologÃ­a</option>
+                            <option value="MATEMATICA" ${obsPrevias.directoraFiltro === 'MATEMATICA' ? 'selected' : ''}>MatemÃ¡tica</option>
+                            <option value="COMUNICACION" ${obsPrevias.directoraFiltro === 'COMUNICACION' ? 'selected' : ''}>ComunicaciÃ³n</option>
+                            <option value="INGLES" ${obsPrevias.directoraFiltro === 'INGLES' ? 'selected' : ''}>InglÃ©s</option>
+                            <option value="EPT" ${obsPrevias.directoraFiltro === 'EPT' ? 'selected' : ''}>EducaciÃ³n para el Trabajo</option>
                             <option value="ARTE" ${obsPrevias.directoraFiltro === 'ARTE' ? 'selected' : ''}>Arte y Cultura</option>
-                            <option value="EDUCACION_FISICA" ${obsPrevias.directoraFiltro === 'EDUCACION_FISICA' ? 'selected' : ''}>Educación Física</option>
+                            <option value="EDUCACION_FISICA" ${obsPrevias.directoraFiltro === 'EDUCACION_FISICA' ? 'selected' : ''}>EducaciÃ³n FÃ­sica</option>
                             <option value="DPCC" ${obsPrevias.directoraFiltro === 'DPCC' ? 'selected' : ''}>DPCC</option>
-                            <option value="EDUCACION_RELIGIOSA" ${obsPrevias.directoraFiltro === 'EDUCACION_RELIGIOSA' ? 'selected' : ''}>Educación Religiosa</option>
+                            <option value="EDUCACION_RELIGIOSA" ${obsPrevias.directoraFiltro === 'EDUCACION_RELIGIOSA' ? 'selected' : ''}>EducaciÃ³n Religiosa</option>
                         </select>
                         <textarea class="form-control" id="f2-obs-directora" rows="3" placeholder="Observaciones de la directora...">${obsPrevias.directora || ''}</textarea>
                     </div>
@@ -1155,14 +1155,12 @@ const App = {
         const errBox = document.getElementById('form2-error');
         if (finalizar) {
             const itemsSinEstado = grupos.reduce((s, g) => s + g.items.filter(i => !i.estado).length, 0);
-            const itemsSinObservacion = grupos.reduce((s, g) => s + g.items.filter(i => !i.observacion).length, 0);
-            const conclusionesVacias = this.camposConclusionFormulario2.filter(c => !conclusiones[c.id]);
-            if (itemsSinEstado > 0 || itemsSinObservacion > 0 || conclusionesVacias.length > 0) {
+            const compromisosVacios = !conclusiones.compromisos;
+            if (itemsSinEstado > 0 || compromisosVacios) {
                 const partes = [];
                 if (itemsSinEstado > 0) partes.push(`${itemsSinEstado} criterio(s) sin marcar Inicio/Proceso/Logrado`);
-                if (itemsSinObservacion > 0) partes.push(`${itemsSinObservacion} observación(es) en blanco`);
-                if (conclusionesVacias.length > 0) partes.push(`${conclusionesVacias.map(c => c.label).join(' y ')} sin completar`);
-                errBox.textContent = `No se puede finalizar: ${partes.join('; ')}. Usa "Guardar borrador" si necesitas continuar después.`;
+                if (compromisosVacios) partes.push('Compromisos sin completar');
+                errBox.textContent = `No se puede finalizar: ${partes.join('; ')}. Usa "Guardar borrador" si necesitas continuar despuÃ©s.`;
                 errBox.style.display = 'flex';
                 return;
             }
@@ -1184,7 +1182,7 @@ const App = {
             fecha: new Date().toISOString(),
         };
 
-        // Agregar observaciones jerárquicas si es docente
+        // Agregar observaciones jerÃ¡rquicas si es docente
         if (persona.rol === 'docente') {
             registro.observacionesJerarquicas = {
                 coordinador: document.getElementById('f2-obs-coordinador')?.value.trim() || '',
@@ -1206,7 +1204,7 @@ const App = {
 
         this.storageSet('sgi_evaluaciones_formulario2', this.evaluacionesFormulario2);
         this.closeModal('form2-modal');
-        this.showToast(finalizar ? 'Formulario 2 finalizado y guardado' : 'Borrador guardado, puedes continuar después', 'success');
+        this.showToast(finalizar ? 'Formulario 2 finalizado y guardado' : 'Borrador guardado, puedes continuar despuÃ©s', 'success');
         this.goTab(this.currentTab);
     },
 
@@ -1216,7 +1214,7 @@ const App = {
         const criterios = this.criteriosPara(this.currentUser.rol);
         const existente = this.yaEvaluado(this.currentUser.dni, dni);
 
-        document.getElementById('evaluation-title').textContent = 'Evaluación · ' + persona.nombre_completo;
+        document.getElementById('evaluation-title').textContent = 'EvaluaciÃ³n Â· ' + persona.nombre_completo;
         const cont = document.getElementById('evaluation-criterios');
         cont.innerHTML = criterios.map(c => {
             const valorPrevio = existente ? (existente.criterios.find(x => x.id === c.id)?.puntaje ?? Math.round(c.max * 0.7)) : Math.round(c.max * 0.7);
@@ -1276,7 +1274,7 @@ const App = {
 
         this.storageSet('sgi_evaluaciones', this.evaluaciones);
         this.closeModal('evaluation-modal');
-        this.showToast('Evaluación guardada correctamente', 'success');
+        this.showToast('EvaluaciÃ³n guardada correctamente', 'success');
         this.goTab(this.currentTab);
     },
 
