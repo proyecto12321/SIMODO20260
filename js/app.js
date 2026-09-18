@@ -1054,7 +1054,7 @@ const App = {
                         <label class="state-option"><input type="radio" name="f2-g${gIdx}-i${iIdx}" value="proceso" ${valorPrevio.estado === 'proceso' ? 'checked' : ''}> <span class="state-badge state-proceso">Proceso</span></label>
                         <label class="state-option"><input type="radio" name="f2-g${gIdx}-i${iIdx}" value="logrado" ${valorPrevio.estado === 'logrado' ? 'checked' : ''}> <span class="state-badge state-logrado">Logrado</span></label>
                     </div>
-                    <input type="text" class="form-control" id="f2-g${gIdx}-i${iIdx}-obs" placeholder="ObservaciÃ³n (opcional)" value="${valorPrevio.observacion || ''}">
+                    <input type="text" class="form-control" id="f2-g${gIdx}-i${iIdx}-obs" placeholder="Observacion (opcional)" value="${valorPrevio.observacion || ''}">
                 </div>`;
             }).join('');
             return `<div class="rubric-group">
