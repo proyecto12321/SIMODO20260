@@ -96,8 +96,8 @@ const App = {
     // Campos de cierre del Formulario 2: van como texto abierto (no como rúbrica
     // de inicio/proceso/logrado), porque son comentarios cualitativos del evaluador.
     camposConclusionFormulario2: [
-        { id: 'observaciones', label: 'Observaciones y sugerencias', placeholder: 'Escribe tus observaciones y sugerencias de manera abierta...' },
-        { id: 'compromisos', label: 'Compromisos', placeholder: 'Escribe los compromisos acordados de manera abierta...' }
+        { id: 'observaciones', label: 'Observaciones y sugerencias', placeholder: 'Escribe tus observaciones y sugerencias de manera abierta...', obligatorio: false },
+        { id: 'compromisos', label: 'Compromisos', placeholder: 'Escribe los compromisos acordados de manera abierta...', obligatorio: true }
     ],
 
     // ------------------------------------------------------------------
@@ -1070,7 +1070,7 @@ const App = {
                 <h4 class="rubric-group-title"><i class="fas fa-comment-dots"></i> Conclusiones</h4>
                 ${this.camposConclusionFormulario2.map(campo => `
                     <div class="form-group">
-                        <label>${campo.label}${campo.id === 'observaciones' ? ' (opcional)' : ''}</label>
+                        <label>${campo.label}${campo.obligatorio ? '' : ' (opcional)'}</label>
                         <textarea class="form-control" id="f2-conclusion-${campo.id}" rows="3" placeholder="${campo.placeholder}">${conclusionesPrevias[campo.id] || ''}</textarea>
                     </div>
                 `).join('')}
@@ -1155,11 +1155,11 @@ const App = {
         const errBox = document.getElementById('form2-error');
         if (finalizar) {
             const itemsSinEstado = grupos.reduce((s, g) => s + g.items.filter(i => !i.estado).length, 0);
-            const compromisosVacios = !conclusiones.compromisos;
-            if (itemsSinEstado > 0 || compromisosVacios) {
+            const conclusionesVacias = this.camposConclusionFormulario2.filter(c => c.obligatorio && !conclusiones[c.id]);
+            if (itemsSinEstado > 0 || conclusionesVacias.length > 0) {
                 const partes = [];
                 if (itemsSinEstado > 0) partes.push(`${itemsSinEstado} criterio(s) sin marcar Inicio/Proceso/Logrado`);
-                if (compromisosVacios) partes.push('Compromisos sin completar');
+                if (conclusionesVacias.length > 0) partes.push(`${conclusionesVacias.map(c => c.label).join(' y ')} sin completar`);
                 errBox.textContent = `No se puede finalizar: ${partes.join('; ')}. Usa "Guardar borrador" si necesitas continuar despuÃ©s.`;
                 errBox.style.display = 'flex';
                 return;
